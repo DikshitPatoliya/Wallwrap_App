@@ -1,11 +1,13 @@
-import { Dimensions, FlatList, Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
-import React, { useRef, useState } from 'react'
+import { Dimensions, FlatList, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import { fonts } from '../utils/fontsPath'
 import { colors } from '../utils/colors'
 import { hp, wp } from '../utils/responsiveScreen'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import { ColorTone, ImageData } from '../utils/JSONData'
+import { useNavigation } from '@react-navigation/native'
+import storage from '@react-native-firebase/storage';
 
 
 
@@ -15,8 +17,18 @@ const HomeScreen = () => {
   const isCarousel = useRef(null)
   const [index, setIndex] = useState(0)
   const SLIDER_WIDTH = Dimensions.get('window').width + 80
-  const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
+  const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
+  const navigation = useNavigation();
 
+  useEffect(() => {
+    getImage()
+  },[])
+
+  const getImage = async() => {
+     const imageRefs = await storage().ref().child('nature/').listAll();
+    const urls = await Promise.all(imageRefs.items.map((ref) => ref.getDownloadURL()));
+    console.log(urls)
+  } 
 
   const renderItems = ({ item, index }) => {
     return (
@@ -80,7 +92,9 @@ const HomeScreen = () => {
           renderItem={(item) => {
             return (
               <View style={{ flex: 1}}>
+                <TouchableOpacity onPress={() => navigation.navigate('FullScreenImage')}>
                 <Image source={{ uri: item.item.image }} style={styles.recentlyImage} />
+                </TouchableOpacity>
               </View>
             )
           }}
@@ -124,6 +138,5 @@ const styles = StyleSheet.create({
     marginBottom: hp(1),
     borderRadius: wp(3),
     resizeMode: 'cover',
-   
   }
 })

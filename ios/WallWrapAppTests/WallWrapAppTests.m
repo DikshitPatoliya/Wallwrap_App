@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface Wallwrap_AppTests : XCTestCase
+@interface WallWrapAppTests : XCTestCase
 
 @end
 
-@implementation Wallwrap_AppTests
+@implementation WallWrapAppTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {

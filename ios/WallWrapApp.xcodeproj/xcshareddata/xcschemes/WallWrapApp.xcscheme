@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Wallwrap_App.app"
-               BlueprintName = "Wallwrap_App"
-               ReferencedContainer = "container:Wallwrap_App.xcodeproj">
+               BuildableName = "WallWrapApp.app"
+               BlueprintName = "WallWrapApp"
+               ReferencedContainer = "container:WallWrapApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "Wallwrap_AppTests.xctest"
-               BlueprintName = "Wallwrap_AppTests"
-               ReferencedContainer = "container:Wallwrap_App.xcodeproj">
+               BuildableName = "WallWrapAppTests.xctest"
+               BlueprintName = "WallWrapAppTests"
+               ReferencedContainer = "container:WallWrapApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Wallwrap_App.app"
-            BlueprintName = "Wallwrap_App"
-            ReferencedContainer = "container:Wallwrap_App.xcodeproj">
+            BuildableName = "WallWrapApp.app"
+            BlueprintName = "WallWrapApp"
+            ReferencedContainer = "container:WallWrapApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Wallwrap_App.app"
-            BlueprintName = "Wallwrap_App"
-            ReferencedContainer = "container:Wallwrap_App.xcodeproj">
+            BuildableName = "WallWrapApp.app"
+            BlueprintName = "WallWrapApp"
+            ReferencedContainer = "container:WallWrapApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

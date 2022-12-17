@@ -1,15 +1,31 @@
-import { FlatList, Image, ImageBackground, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../utils/colors';
 import { hp, wp } from '../utils/responsiveScreen';
 import { fonts } from '../utils/fontsPath';
 import { categorie } from '../utils/JSONData';
+import { useNavigation } from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 
 const CategoriesScreen = () => {
 
 
   const { top } = useSafeAreaInsets();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    getImage()
+  },[])
+
+  const getImage = async() => {
+    const user = await firestore().collection('Categories').doc('Nature').get();
+    console.log(user.data())
+  //   const imageRefs = await storage().ref().child('nature/').listAll();
+  //  const urls = await Promise.all(imageRefs.items.map((ref) => ref.getDownloadURL()));
+  //  console.log(urls)
+ } 
 
   return (
     <View style={[styles.container, { paddingTop: top + hp(2) }]}>
@@ -20,12 +36,14 @@ const CategoriesScreen = () => {
       contentContainerStyle={{ paddingVertical: hp(3) }}
       renderItem={(item) => {
         return(
+          <TouchableOpacity onPress={() => navigation.navigate('CategoriesDetailScreen')}>
           <ImageBackground
           imageStyle={{ borderRadius: wp(3)}}
           source={{uri: item.item.categorieImage}} style={styles.categoriesImage}>
           <View style={styles.darkImage}/>
           <Text style={styles.titleText}>{item.item.categoriesTitle}</Text>
           </ImageBackground>
+          </TouchableOpacity>
         )
       }}
       />

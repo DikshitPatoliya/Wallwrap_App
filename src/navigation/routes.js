@@ -9,6 +9,8 @@ import TrendingScreen from '../screen/TrendingScreen';
 import { imagePath } from '../utils/ImagePath';
 import { colors } from '../utils/colors';
 import { hp, wp } from '../utils/responsiveScreen';
+import FullScreenImage from '../screen/FullScreenImage';
+import CategoriesDetailScreen from '../screen/CategoriesDetailScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -20,6 +22,8 @@ const Routes = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen  name="FullScreenImage" component={FullScreenImage}/>
+      <Stack.Screen name="CategoriesDetailScreen" component={CategoriesDetailScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -33,27 +37,14 @@ function Home() {
             tabBarActiveTintColor: colors.orange,
             tabBarInactiveTintColor: colors.black,
             tabBarStyle: { 
-              borderTopWidth: 0,
-              height: hp(8.5), 
+              height: hp(9), 
               backgroundColor: colors.white,
-              marginHorizontal:wp(10),
-              position:'absolute',
-              bottom:hp(4),
-              borderRadius:wp(15),
-              shadowColor: "#000",
-              shadowOffset: {
-	              width: 0,
-               	height: 0,
-              },
-              shadowOpacity: 0.10,
-              shadowRadius: 6.68,
-              elevation: 11,
             },
             tabBarLabel: ({ focused }) => (
                 <View style={{
                     borderWidth: focused ?hp(0.3) : 0, 
                     width:wp(6), 
-                    bottom:hp(1.5),
+                    marginBottom:wp(5),
                     borderRadius:wp(5),
                     borderColor: colors.orange
                 }}/>
@@ -61,10 +52,10 @@ function Home() {
             tabBarIcon: ({  focused }) => (
               <View style={{justifyContent:"center"}}>
                 {
-                  route.name == 'HomeScreen' ?
+                  route.name == 'HomeTab' ?
                    <Image source={imagePath.home} style={[styles.icons,{tintColor: focused ?  colors.orange : colors.black}]} />
                     :
-                    route.name == 'CategoriesScreen' ?
+                    route.name == 'Categories' ?
                     <Image source={imagePath.grid} style={[styles.icons,{tintColor: focused ?  colors.orange : colors.black}]}/>
                       :
                       <Image source={imagePath.trending} style={[styles.icons,{tintColor: focused ?  colors.orange : colors.black}]}/>
@@ -72,11 +63,27 @@ function Home() {
               </View>
             ),
           })}>
-              <Tab.Screen name="HomeScreen" component={HomeScreen} />
-              <Tab.Screen name="CategoriesScreen" component={CategoriesScreen} />
+              <Tab.Screen name="HomeTab" component={HomeTab} />
+              <Tab.Screen name="Categories" component={Categories} />
               <Tab.Screen name="TrendingScreen" component={TrendingScreen} />
         </Tab.Navigator>
     )
+}
+
+function HomeTab() {
+  return(
+    <Stack.Navigator initialRouteName='HomeScreen' screenOptions={{headerShown:false}}>
+      <Stack.Screen name="HomeScreen" component={HomeScreen}/>
+    </Stack.Navigator>
+  )
+}
+
+function Categories() {
+  return(
+    <Stack.Navigator initialRouteName='CategoriesScreen' screenOptions={{headerShown:false}}>
+      <Stack.Screen name="CategoriesScreen" component={CategoriesScreen}/>
+    </Stack.Navigator>
+  )
 }
 
 export default Routes

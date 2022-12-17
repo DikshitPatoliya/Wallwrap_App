@@ -1,4 +1,4 @@
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hp, wp } from '../utils/responsiveScreen';
@@ -52,6 +52,9 @@ const TrendingScreen = () => {
           inactiveDotOpacity={0.4}
           tappableDots={true}
         /> */}
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Quick Set</Text>
+        </TouchableOpacity>
     </View>
   )
 }
@@ -74,4 +77,17 @@ const styles = StyleSheet.create({
     height: hp(50),
     borderRadius: wp(5)
   },
+  button:{
+    backgroundColor: colors.dark_blue,
+    alignSelf:"center",
+    borderRadius:wp(2),
+    marginTop:hp(5),
+  },
+  buttonText:{
+    color:colors.white,
+    paddingHorizontal:wp(4),
+    paddingVertical:hp(1),
+    fontFamily:fonts.SEMIBOLD,
+    fontSize:20
+  }
 })

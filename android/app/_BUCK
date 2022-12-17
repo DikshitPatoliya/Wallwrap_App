@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.wallwrap_app",
+    package = "com.wallwrapapp",
 )
 
 android_resource(
     name = "res",
-    package = "com.wallwrap_app",
+    package = "com.wallwrapapp",
     res = "src/main/res",
 )
 
