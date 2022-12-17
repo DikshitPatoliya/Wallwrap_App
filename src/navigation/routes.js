@@ -11,6 +11,7 @@ import { colors } from '../utils/colors';
 import { hp, wp } from '../utils/responsiveScreen';
 import FullScreenImage from '../screen/FullScreenImage';
 import CategoriesDetailScreen from '../screen/CategoriesDetailScreen';
+import TopDetailScreen from '../screen/TopDetailScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -24,6 +25,8 @@ const Routes = () => {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen  name="FullScreenImage" component={FullScreenImage}/>
       <Stack.Screen name="CategoriesDetailScreen" component={CategoriesDetailScreen}/>
+      <Stack.Screen name="TopDetailScreen" component={TopDetailScreen}/>
+
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -5,16 +5,22 @@ import { colors } from '../utils/colors';
 import { hp, wp } from '../utils/responsiveScreen';
 import { imagePath } from '../utils/ImagePath';
 import { fonts } from '../utils/fontsPath';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import WallpaperManager, {TYPE} from "react-native-wallpaper-manage";
 
 const FullScreenImage = () => {
 
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
+  const routes = useRoute();
+
+  const setWallpaper = async() => {
+    const result = await WallpaperManager.setWallpaper(routes?.params?.url, TYPE.FLAG_SYSTEM)
+    console.log("result",result)
+  }
 
   return (
-    <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1576106671236-0cb9f26137cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1827&q=80' }} style={[styles.container, { paddingTop: top + hp(2) }]}>
+    <ImageBackground  source={{ uri: routes?.params?.url }} style={[styles.container, { paddingTop: top + hp(2) }]}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Image source={imagePath.backArrow} style={styles.backArrow} />
       </TouchableOpacity>
@@ -25,10 +31,7 @@ const FullScreenImage = () => {
           </View>
           <Text style={styles.text}>Save</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={async () => {
-       const result = await WallpaperManager.setWallpaper('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1748&q=80', TYPE.FLAG_LOCK)
-       console.log("result",result)
-        }}>
+        <TouchableOpacity onPress={async () => setWallpaper()}>
           <View style={styles.bottom}>
             <Image source={imagePath.edit} style={styles.backArrow} />
           </View>

@@ -1,48 +1,51 @@
 import { FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../utils/colors';
 import { hp, wp } from '../utils/responsiveScreen';
 import { fonts } from '../utils/fontsPath';
-import { categorie } from '../utils/JSONData';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
+import { commanStyle } from '../utils/commanStyle';
+import FastImage from 'react-native-fast-image';
 
 const CategoriesScreen = () => {
 
 
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
+  const [data, setData] = useState();
+  const [loader, setLoader] = useState();
 
   useEffect(() => {
     getImage()
-  },[])
+  }, [])
 
-  const getImage = async() => {
-    const user = await firestore().collection('Categories').doc('Nature').get();
-    console.log(user.data())
-  //   const imageRefs = await storage().ref().child('nature/').listAll();
-  //  const urls = await Promise.all(imageRefs.items.map((ref) => ref.getDownloadURL()));
-  //  console.log(urls)
- } 
+  const getImage = async () => {
+    const user = await firestore().collection('CategoriesName').doc('CategoriesName').get();
+    setData(user.data())
+  }
+
 
   return (
     <View style={[styles.container, { paddingTop: top + hp(2) }]}>
+      {loader && <ActivityIndicator size={"large"} color={colors.dark} style={commanStyle.loader} />}
       <Text style={styles.topText}>Categories</Text>
       <FlatList
-      data={categorie}
+      data={data?.all}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingVertical: hp(3) }}
       renderItem={(item) => {
         return(
-          <TouchableOpacity onPress={() => navigation.navigate('CategoriesDetailScreen')}>
-          <ImageBackground
-          imageStyle={{ borderRadius: wp(3)}}
-          source={{uri: item.item.categorieImage}} style={styles.categoriesImage}>
+          <TouchableOpacity onPress={() => navigation.navigate('CategoriesDetailScreen',{type:item?.item?.title})}>
+          <FastImage  
+          imageStyle={{ borderRadius: wp(3)}}  
+          source={{uri: item?.item?.image,priority: FastImage.priority.high }} 
+          resizeMode={FastImage.resizeMode.cover}
+          style={styles.categoriesImage}>
           <View style={styles.darkImage}/>
-          <Text style={styles.titleText}>{item.item.categoriesTitle}</Text>
-          </ImageBackground>
+          <Text style={styles.titleText}>{item?.item?.title}</Text>
+          </FastImage>
           </TouchableOpacity>
         )
       }}
