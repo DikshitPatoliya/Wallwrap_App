@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,12 +12,25 @@ import { hp, wp } from '../utils/responsiveScreen';
 import FullScreenImage from '../screen/FullScreenImage';
 import CategoriesDetailScreen from '../screen/CategoriesDetailScreen';
 import TopDetailScreen from '../screen/TopDetailScreen';
+import { useNetInfo } from '@react-native-community/netinfo';
+import NoInternet from '../Components/NoInternet';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 
 const Routes = () => {
+
+  const [isOpen, setIsOpen] = useState(false);
+    const internetState  = useNetInfo();
+
+    useEffect(() => {
+      if (internetState.isConnected === false) {
+       setIsOpen(true)
+  }else{
+    setIsOpen(false)
+  }
+}, [internetState.isConnected])
 
   return (
     <NavigationContainer>
@@ -26,8 +39,8 @@ const Routes = () => {
         <Stack.Screen  name="FullScreenImage" component={FullScreenImage}/>
       <Stack.Screen name="CategoriesDetailScreen" component={CategoriesDetailScreen}/>
       <Stack.Screen name="TopDetailScreen" component={TopDetailScreen}/>
-
       </Stack.Navigator>
+      {isOpen && <NoInternet/>}
     </NavigationContainer>
   )
 }

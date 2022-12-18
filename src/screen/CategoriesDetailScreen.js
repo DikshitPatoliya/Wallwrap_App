@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {  FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
@@ -7,7 +7,6 @@ import { hp, wp } from '../utils/responsiveScreen';
 import { imagePath } from '../utils/ImagePath';
 import { fonts } from '../utils/fontsPath';
 import firestore from '@react-native-firebase/firestore';
-import { commanStyle } from '../utils/commanStyle';
 import ImageView from '../Components/ImageView';
 
 const CategoriesDetailScreen = () => {
@@ -16,7 +15,7 @@ const CategoriesDetailScreen = () => {
   const navigation = useNavigation();
   const routes = useRoute();
   const [data, setData] = useState();
-  const [loader, setLoader] = useState();
+  const [loader, setLoader] = useState(false);
   const IsFoused = useIsFocused();
 
   useEffect(() => {
@@ -26,10 +25,8 @@ const CategoriesDetailScreen = () => {
   }, [IsFoused])
 
   const getImage = async () => {
-    setLoader(true)
     const user = await firestore().collection('Categories').doc(`${routes?.params?.type}`).get();
     setData(user.data())
-    setLoader(false)
   }
 
   return (
@@ -54,6 +51,8 @@ const CategoriesDetailScreen = () => {
                <ImageView
                     uri={item?.item?.image}
                     loader={loader}
+                    onLoadStart={() => setLoader(true)}
+                    onLoadEnd={() => setLoader(false)}
                     onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
                   />
             </View>

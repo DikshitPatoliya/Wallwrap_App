@@ -22,31 +22,39 @@ const TrendingScreen = () => {
   const [loader, setLoader] = useState(false);
 
   useEffect(() => {
-    if(IsFoused){
+    if (IsFoused) {
       getImage()
     }
   }, [IsFoused])
 
   const getImage = async () => {
-    setLoader(true)
     const user = await firestore().collection('Categories').doc('Trending').get();
     setData(user.data())
-    setLoader(false)
   }
   const renderItems = ({ item, index }) => {
     return (
       <TouchableOpacity onPress={() => navigation.navigate('FullScreenImage', { url: item?.image })}>
-        <FastImage 
-        source={{ uri: item.image ,  priority: FastImage.priority.high}} 
-        style={[styles.image, { width: ITEM_WIDTH }]} 
-        resizeMode={FastImage.resizeMode.cover} />
+        {loader &&
+          <ActivityIndicator
+            color={colors.orange}
+            style={[styles.image, {
+              width: ITEM_WIDTH,
+              position:'absolute',
+              zIndex:999,
+              backgroundColor:colors.white
+            }]} />}
+        <FastImage
+          source={{ uri: item.image, priority: FastImage.priority.high }}
+          onLoadStart={() => setLoader(true)}
+          onLoadEnd={() => setLoader(false)}
+          style={[styles.image, { width: ITEM_WIDTH }]}
+          resizeMode={FastImage.resizeMode.cover} />
       </TouchableOpacity>
     )
   }
 
   return (
     <View style={[styles.container, { paddingTop: top + hp(2) }]}>
-      {loader && <ActivityIndicator size={'large'} color={colors.orange} style={styles.loader}/>}
       <Text style={styles.title}>Trending</Text>
       <View style={styles.silderView}>
         <Carousel
@@ -104,12 +112,12 @@ const styles = StyleSheet.create({
     height: hp(80),
     marginTop: hp(3)
   },
-  loader:{
-    top:0,
-    bottom:0,
-    right:0,
-    left:0,
-    position:'absolute',
-    zIndex:9999
+  loader: {
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    position: 'absolute',
+    zIndex: 9999
   }
 })

@@ -13,7 +13,7 @@ const TopDetailScreen = () => {
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
   const routes = useRoute();
-  const [loader, setLoader] = useState();
+  const [loader, setLoader] = useState(false);
   
   return (
     <View style={[styles.container, { paddingTop: top + hp(1) }]}>
@@ -38,6 +38,8 @@ const TopDetailScreen = () => {
             <TouchableOpacity onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}>
               <Image
                 source={{ uri: item?.item?.image }}
+                onLoadStart={() => setLoader(true)}
+                onLoadEnd={() => setLoader(false)}
                 style={styles.recentlyImage} />
             </TouchableOpacity>
 

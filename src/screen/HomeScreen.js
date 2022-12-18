@@ -31,19 +31,13 @@ const HomeScreen = () => {
   }, [IsFoused])
 
   const getRecentlyImage = async () => {
-    setRecentlyLoader(true)
     const Recently = await firestore().collection('RecentlyUploaded').doc('RecentlyUploaded').get();
     setRecently(Recently.data())
-    setRecentlyLoader(false)
-
-
   }
 
   const getImage = async () => {
-    setLoader(true)
     const user = await firestore().collection('Categories').doc('Top').get();
     setData(user.data())
-    setLoader(false)
   }
 
   return (
@@ -65,6 +59,8 @@ const HomeScreen = () => {
                 <ImageView
                   uri={item?.item?.image}
                   loader={loader}
+                  onLoadStart={() => setLoader(true)}
+                  onLoadEnd={() => setLoader(false)}
                   onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
                 />
               )
@@ -84,6 +80,8 @@ const HomeScreen = () => {
                   <ImageView
                     uri={item?.item?.image}
                     loader={recentlyLoader}
+                    onLoadStart={() => setRecentlyLoader(true)}
+                    onLoadEnd={() => setRecentlyLoader(false)}
                     onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
                   />
                 </View>
@@ -120,7 +118,7 @@ const styles = StyleSheet.create({
   },
   columns: {
     flex: 1,
-    paddingVertical: hp(2)
+    paddingVertical: hp(2),
   },
   recentlyImage: {
     width: wp(43),

@@ -5,5 +5,8 @@ export const imagePath = {
     backArrow:require('../assets/Icons/arrow-left.png'),
     arrowCircle:require('../assets/Icons/arrowcircle.png'),
     edit:require('../assets/Icons/edit.png'),
+    noInternet:require('../assets/Icons/noInternet.png'),
+    homeWhite:require('../assets/Icons/homeWhite.png'),
+    lock:require('../assets/Icons/lock.png'),
 
 }
