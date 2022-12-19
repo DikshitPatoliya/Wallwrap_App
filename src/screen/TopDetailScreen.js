@@ -7,6 +7,9 @@ import { hp, wp } from '../utils/responsiveScreen';
 import { fonts } from '../utils/fontsPath';
 import { imagePath } from '../utils/ImagePath';
 import { commanStyle } from '../utils/commanStyle';
+import { FadeInFlatList } from '@ja-ka/react-native-fade-in-flatlist';
+import FastImage from 'react-native-fast-image';
+import ImageView from '../Components/ImageView';
 
 const TopDetailScreen = () => {
 
@@ -18,35 +21,37 @@ const TopDetailScreen = () => {
   return (
     <View style={[styles.container, { paddingTop: top + hp(1) }]}>
     {loader && <ActivityIndicator size={"large"} color={colors.dark} style={commanStyle.loader} />}
-    <View style={{ flexDirection: 'row' }}>
+    <View style={{ flexDirection: 'row',  paddingHorizontal: wp(5)}}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Image source={imagePath.backArrow} style={styles.backIcons} />
       </TouchableOpacity>
-      <View style={{ alignSelf: "center", flex: 1 }}>
-        <Text style={styles.headerText}>{routes?.params?.type}</Text>
-      </View>
     </View>
-    <FlatList
-      data={routes?.params?.item}
-      numColumns={2}
-      scrollEnabled={true}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.columns}
-      renderItem={(item) => {
-        return (
-          <View style={{ flex: 1 }}>
-            <TouchableOpacity onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}>
-              <Image
-                source={{ uri: item?.item?.image }}
-                onLoadStart={() => setLoader(true)}
-                onLoadEnd={() => setLoader(false)}
-                style={styles.recentlyImage} />
-            </TouchableOpacity>
-
-          </View>
-        )
-      }}
-    />
+    <FadeInFlatList
+          data={routes?.params?.item}
+          initialDelay={0}
+          numColumns={2}
+          durationPerItem={500}
+          parallelItems={1}
+          style={{marginHorizontal:wp(4.5)}}
+          columnWrapperStyle={{justifyContent:'space-between'}}
+          itemsToFadeIn={10}
+          scrollEnabled={false}
+          contentContainerStyle={styles.columns}
+          renderItem={(item) => {
+            return (
+              <View style={{ flex: 0.5}}>
+                <ImageView
+                  uri={item?.item?.image}
+                  loader={loader}
+                  priority={FastImage.priority.normal}
+                  onLoadStart={() => setLoader(true)}
+                  onLoadEnd={() => setLoader(false)}
+                  onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
+                />
+                </View>
+            )
+          }}
+        />
   </View>
   )
 }
@@ -57,28 +62,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.white,
-        paddingHorizontal: wp(5)
       },
       backIcons: {
-        tintColor: 'black',
+        tintColor: colors.black,
         width: wp(8),
         height: wp(8)
       },
-      headerText: {
-        alignSelf: "center",
-        fontSize: 25,
-        color: colors.black,
-        fontFamily: fonts.SEMIBOLD
-      },
       columns: {
         paddingVertical: hp(2),
-      },
-      recentlyImage: {
-        width: wp(43),
-        marginHorizontal: wp(0.5),
-        height: wp(70),
-        marginBottom: hp(1),
-        borderRadius: wp(3),
-        resizeMode: 'cover',
       },
 })

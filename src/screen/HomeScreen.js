@@ -7,6 +7,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore';
 import ImageView from '../Components/ImageView'
+import { FadeInFlatList } from '@ja-ka/react-native-fade-in-flatlist'
+import FastImage from 'react-native-fast-image'
 
 const HomeScreen = () => {
 
@@ -59,6 +61,8 @@ const HomeScreen = () => {
                 <ImageView
                   uri={item?.item?.image}
                   loader={loader}
+                  priority={FastImage.priority.high}
+                  imageStyle={{marginBottom:0, marginHorizontal:wp(2)}}
                   onLoadStart={() => setLoader(true)}
                   onLoadEnd={() => setLoader(false)}
                   onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
@@ -67,28 +71,33 @@ const HomeScreen = () => {
             }}
           />
         </View>
-        <Text style={[styles.topText, { marginHorizontal: wp(5) }]}>Recently Uploaded</Text>
-        <View style={{ marginHorizontal: wp(5) }}>
-          <FlatList
-            data={recently?.all}
-            numColumns={2}
-            scrollEnabled={false}
-            contentContainerStyle={styles.columns}
-            renderItem={(item) => {
-              return (
-                <View style={{ flex: 1 }}>
-                  <ImageView
-                    uri={item?.item?.image}
-                    loader={recentlyLoader}
-                    onLoadStart={() => setRecentlyLoader(true)}
-                    onLoadEnd={() => setRecentlyLoader(false)}
-                    onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
-                  />
+        <Text style={[styles.topText, { marginHorizontal: wp(5), marginTop:hp(1) }]}>Recently Uploaded</Text>
+        <FadeInFlatList
+          data={recently?.all}
+          initialDelay={0}
+          numColumns={2}
+          durationPerItem={500}
+          parallelItems={1}
+          style={{marginHorizontal:wp(4.5)}}
+          columnWrapperStyle={{justifyContent:'space-between'}}
+          itemsToFadeIn={10}
+          scrollEnabled={false}
+          contentContainerStyle={styles.columns}
+          renderItem={(item) => {
+            return (
+              <View style={{ flex: 0.5}}>
+                <ImageView
+                  uri={item?.item?.image}
+                  loader={recentlyLoader}
+                  priority={FastImage.priority.high}
+                  onLoadStart={() => setRecentlyLoader(true)}
+                  onLoadEnd={() => setRecentlyLoader(false)}
+                  onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
+                />
                 </View>
-              )
-            }}
-          />
-        </View>
+            )
+          }}
+        />
       </ScrollView>
     </View>
   )
@@ -105,16 +114,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.SEMIBOLD,
     color: colors.black,
     fontSize: 18,
-  },
-  image: {
-    height: hp(25),
-    borderRadius: wp(5)
-  },
-  colorsTone: {
-    height: hp(7),
-    width: wp(15),
-    marginRight: wp(2),
-    borderRadius: wp(3)
   },
   columns: {
     flex: 1,

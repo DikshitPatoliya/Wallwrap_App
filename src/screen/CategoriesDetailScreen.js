@@ -8,6 +8,8 @@ import { imagePath } from '../utils/ImagePath';
 import { fonts } from '../utils/fontsPath';
 import firestore from '@react-native-firebase/firestore';
 import ImageView from '../Components/ImageView';
+import { FadeInFlatList } from '@ja-ka/react-native-fade-in-flatlist';
+import FastImage from 'react-native-fast-image';
 
 const CategoriesDetailScreen = () => {
 
@@ -31,7 +33,7 @@ const CategoriesDetailScreen = () => {
 
   return (
     <View style={[styles.container, { paddingTop: top + hp(1) }]}>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', marginHorizontal:wp(5) }}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={imagePath.backArrow} style={styles.backIcons} />
         </TouchableOpacity>
@@ -39,26 +41,31 @@ const CategoriesDetailScreen = () => {
           <Text style={styles.headerText}>{routes?.params?.type}</Text>
         </View>
       </View>
-      <FlatList
-        data={data?.all}
-        numColumns={2}
-        scrollEnabled={true}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.columns}
-        renderItem={(item) => {
-          return (
-            <View style={{ flex: 1 }}>
-               <ImageView
-                    uri={item?.item?.image}
-                    loader={loader}
-                    onLoadStart={() => setLoader(true)}
-                    onLoadEnd={() => setLoader(false)}
-                    onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
-                  />
-            </View>
-          )
-        }}
-      />
+      <FadeInFlatList
+          data={data?.all}
+          initialDelay={0}
+          numColumns={2}
+          durationPerItem={500}
+          parallelItems={1}
+          style={{marginHorizontal:wp(4.5)}}
+          columnWrapperStyle={{justifyContent:'space-between'}}
+          itemsToFadeIn={10}
+          contentContainerStyle={styles.columns}
+          renderItem={(item) => {
+            return (
+              <View style={{flex:0.5}}>
+                <ImageView
+                  uri={item?.item?.image}
+                  loader={loader}
+                  priority={FastImage.priority.normal}
+                  onLoadStart={() => setLoader(true)}
+                  onLoadEnd={() => setLoader(false)}
+                  onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
+                />
+                </View>
+            )
+          }}
+        />
     </View>
   )
 }
@@ -69,7 +76,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    paddingHorizontal: wp(5)
   },
   backIcons: {
     tintColor: 'black',
@@ -86,7 +92,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp(2),
   },
   recentlyImage: {
-    width: wp(43),
+    width: wp(44),
     marginHorizontal: wp(0.5),
     height: wp(70),
     marginBottom: hp(1),

@@ -8,12 +8,12 @@ import Carousel from 'react-native-snap-carousel';
 import firestore from '@react-native-firebase/firestore';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import { imagePath } from '../utils/ImagePath';
+import { commanStyle } from '../utils/commanStyle';
 
 const TrendingScreen = () => {
 
   const { top } = useSafeAreaInsets();
-  const isCarousel = useRef(null)
-  const [index, setIndex] = useState(0)
   const SLIDER_WIDTH = Dimensions.get('window').width + 80
   const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
   const [data, setData] = useState();
@@ -33,16 +33,17 @@ const TrendingScreen = () => {
   }
   const renderItems = ({ item, index }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('FullScreenImage', { url: item?.image })}>
+      <TouchableOpacity disabled={ loader == false ? false : true} onPress={() => navigation.navigate('FullScreenImage', { url: item?.image })}>
         {loader &&
-          <ActivityIndicator
-            color={colors.orange}
-            style={[styles.image, {
-              width: ITEM_WIDTH,
-              position:'absolute',
-              zIndex:999,
-              backgroundColor:colors.white
-            }]} />}
+        <View style={[styles.image, {
+          width: ITEM_WIDTH,
+          position:'absolute',
+          zIndex:999,
+          justifyContent:"center",
+          backgroundColor:colors.white
+        }]}>
+         <Image source={imagePath.wLogo} style={commanStyle.wLogo} /> 
+        </View>}
         <FastImage
           source={{ uri: item.image, priority: FastImage.priority.high }}
           onLoadStart={() => setLoader(true)}
@@ -62,14 +63,12 @@ const TrendingScreen = () => {
           loop={true}
           layout="default"
           layoutCardOffset={9}
-          ref={isCarousel}
           data={data?.all}
           renderItem={renderItems}
           sliderWidth={wp(100)}
           itemWidth={wp(85)}
           inactiveSlideShift={0}
           useScrollView={true}
-          onSnapToItem={(index) => setIndex(index)}
         />
       </View>
     </View>
@@ -82,7 +81,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    paddingHorizontal: wp(5)
   },
   title: {
     alignSelf: "center",

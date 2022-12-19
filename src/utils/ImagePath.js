@@ -8,5 +8,5 @@ export const imagePath = {
     noInternet:require('../assets/Icons/noInternet.png'),
     homeWhite:require('../assets/Icons/homeWhite.png'),
     lock:require('../assets/Icons/lock.png'),
-
+    wLogo:require('../assets/Icons/W.png'),
 }

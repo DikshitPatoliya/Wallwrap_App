@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@ja-ka/react-native-fade-in-flatlist": "^1.0.13",
     "@react-native-community/netinfo": "^9.3.7",
     "@react-native-firebase/app": "^16.5.0",
     "@react-native-firebase/firestore": "^16.5.0",
