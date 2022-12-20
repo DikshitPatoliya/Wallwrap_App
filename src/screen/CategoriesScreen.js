@@ -1,17 +1,14 @@
-import { ActivityIndicator, FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList,  ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../utils/colors';
 import { hp, wp } from '../utils/responsiveScreen';
 import { fonts } from '../utils/fontsPath';
-import { useNavigation, validatePathConfig } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { commanStyle } from '../utils/commanStyle';
-import FastImage from 'react-native-fast-image';
-import { FadeInFlatList } from '@ja-ka/react-native-fade-in-flatlist';
 
 const CategoriesScreen = () => {
-
 
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
@@ -35,26 +32,20 @@ const CategoriesScreen = () => {
       {loader && <ActivityIndicator size={"large"} color={colors.dark} style={commanStyle.loader} />}
       <Text style={styles.topText}>Categories</Text>
       <View style={{ alignSelf: "center" }}>
-        <FadeInFlatList
+        <FlatList
           data={data?.all}
-          initialDelay={0}
-          durationPerItem={500}
           showsVerticalScrollIndicator={false}
-          parallelItems={1}
-          itemsToFadeIn={10}
+          contentContainerStyle ={{paddingBottom:hp(10)}}
           renderItem={(item) => {
             return (
               <TouchableOpacity onPress={() => navigation.navigate('CategoriesDetailScreen', { type: item?.item?.title })}>
-                <FastImage
-                  source={{
-                    uri: item?.item?.image,
-                    priority: FastImage.priority.high,
-                  }}
-                  resizeMode={FastImage.resizeMode.cover}
+                <ImageBackground
+                  imageStyle={{borderRadius:wp(3)}}
+                  source={{uri: item?.item?.image}}
                   style={styles.categoriesImage}>
                   <View style={styles.darkImage} />
                   <Text style={styles.titleText}>{item?.item?.title}</Text>
-                </FastImage>
+                </ImageBackground>
               </TouchableOpacity>
             )
           }}
@@ -73,9 +64,9 @@ const styles = StyleSheet.create({
   },
   topText: {
     fontFamily: fonts.SEMIBOLD,
-    color: colors.black,
-    fontSize: 25,
-    marginHorizontal: wp(5)
+    color: colors.dark,
+    fontSize: 40,
+    marginHorizontal: wp(5),
   },
   categoriesImage: {
     width: wp(90),
@@ -83,13 +74,11 @@ const styles = StyleSheet.create({
     borderRadius: wp(3),
     justifyContent: "center",
     marginBottom: hp(2)
-
   },
   darkImage: {
     backgroundColor: colors.black_40,
     flex: 1,
     borderRadius: wp(3),
-
   },
   titleText: {
     position: 'absolute',

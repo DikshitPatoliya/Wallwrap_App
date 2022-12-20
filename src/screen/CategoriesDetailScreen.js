@@ -1,4 +1,4 @@
-import {  FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {   FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import firestore from '@react-native-firebase/firestore';
 import ImageView from '../Components/ImageView';
 import { FadeInFlatList } from '@ja-ka/react-native-fade-in-flatlist';
 import FastImage from 'react-native-fast-image';
+import axios from 'axios';
 
 const CategoriesDetailScreen = () => {
 
@@ -41,31 +42,24 @@ const CategoriesDetailScreen = () => {
           <Text style={styles.headerText}>{routes?.params?.type}</Text>
         </View>
       </View>
-      <FadeInFlatList
+      <FlatList
           data={data?.all}
-          initialDelay={0}
-          numColumns={2}
-          durationPerItem={500}
-          parallelItems={1}
+          showsVerticalScrollIndicator={false}
           style={{marginHorizontal:wp(4.5)}}
           columnWrapperStyle={{justifyContent:'space-between'}}
-          itemsToFadeIn={10}
           contentContainerStyle={styles.columns}
           renderItem={(item) => {
             return (
-              <View style={{flex:0.5}}>
                 <ImageView
                   uri={item?.item?.image}
                   loader={loader}
-                  priority={FastImage.priority.normal}
                   onLoadStart={() => setLoader(true)}
                   onLoadEnd={() => setLoader(false)}
                   onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
                 />
-                </View>
             )
           }}
-        />
+      />
     </View>
   )
 }
@@ -91,13 +85,4 @@ const styles = StyleSheet.create({
   columns: {
     paddingVertical: hp(2),
   },
-  recentlyImage: {
-    width: wp(44),
-    marginHorizontal: wp(0.5),
-    height: wp(70),
-    marginBottom: hp(1),
-    borderRadius: wp(3),
-    resizeMode: 'cover',
-  },
-  
 })

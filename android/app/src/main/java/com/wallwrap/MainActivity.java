@@ -14,10 +14,9 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "WallWrapApp";
+    return "WallWrap";
   }
-
-   @Override
+  @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.show(this);  // here
         super.onCreate(savedInstanceState);

@@ -2,28 +2,24 @@ import { Image,  StyleSheet, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { colors } from '../utils/colors'
 import { hp, wp } from '../utils/responsiveScreen'
-import FastImage from 'react-native-fast-image'
 import { imagePath } from '../utils/ImagePath'
 import { commanStyle } from '../utils/commanStyle'
 
-const ImageView = ({loader, uri, onPress, onLoadStart,onLoadEnd,imageStyle,priority}) => {
+const ImageView = ({loader, uri, onPress, onLoadStart,onLoadEnd,imageStyle,}) => {
   return (
     <View>
-    <TouchableOpacity  disabled={ loader == false ? false : true} onPress={onPress}>
+    <TouchableOpacity 
+      disabled={ loader == false ? false : true} onPress={onPress}>
       {loader && 
       <View style={styles.loader}>
       <Image source={imagePath.wLogo} style={commanStyle.wLogo} /> 
       </View>
       }
-      <FastImage  
-      source={{ 
-        uri: uri , 
-        priority:priority,
-      }} 
+      <Image 
+      defaultSource={imagePath.wLogo} 
       onLoadStart={onLoadStart}
       onLoadEnd={onLoadEnd}
-      resizeMode={FastImage.resizeMode.cover}
-      style={[styles.recentlyImage,imageStyle]} />
+      source={{ uri: uri  }} style={[styles.recentlyImage,imageStyle]}/>
     </TouchableOpacity>
     </View>
   )
@@ -41,11 +37,10 @@ const styles = StyleSheet.create({
       },
       loader:{
         width: wp(44),
-        marginHorizontal: wp(0.5),
         position:"absolute",
         alignSelf:"center",
         justifyContent:"center",
-        backgroundColor:colors.white,
+        backgroundColor:colors.black_40,
         zIndex:999,
         height: wp(70),
         marginBottom: hp(1),

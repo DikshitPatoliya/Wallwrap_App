@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, ImageBackground, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../utils/colors';
@@ -7,7 +7,6 @@ import { imagePath } from '../utils/ImagePath';
 import { fonts } from '../utils/fontsPath';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import WallpaperManager, { TYPE } from "react-native-wallpaper-manage";
-import FastImage from 'react-native-fast-image';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const FullScreenImage = () => {
@@ -58,10 +57,10 @@ const FullScreenImage = () => {
   };
 
   return (
-    <FastImage
+    <ImageBackground
       onLoadStart={() => setLoader(true)}
       onLoadEnd={() => setLoader(false)}
-      source={{ uri: routes?.params?.url, priority: FastImage.priority.normal, }}
+      source={{ uri: routes?.params?.url, }}
       style={[styles.container, { paddingTop: top + hp(2) }]}>
       {loader && <ActivityIndicator color={colors.dark} size={'large'} style={styles.loader} />}
       <View style={styles.mainContainer}>
@@ -90,7 +89,7 @@ const FullScreenImage = () => {
           <Text style={styles.text}>Home</Text>
         </TouchableOpacity>
       </View>
-    </FastImage>
+    </ImageBackground>
   )
 }
 

@@ -1,5 +1,5 @@
-import { ActivityIndicator, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import {  Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hp, wp } from '../utils/responsiveScreen';
 import { colors } from '../utils/colors';
@@ -7,7 +7,6 @@ import { fonts } from '../utils/fontsPath';
 import Carousel from 'react-native-snap-carousel';
 import firestore from '@react-native-firebase/firestore';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import FastImage from 'react-native-fast-image';
 import { imagePath } from '../utils/ImagePath';
 import { commanStyle } from '../utils/commanStyle';
 
@@ -44,12 +43,12 @@ const TrendingScreen = () => {
         }]}>
          <Image source={imagePath.wLogo} style={commanStyle.wLogo} /> 
         </View>}
-        <FastImage
-          source={{ uri: item.image, priority: FastImage.priority.high }}
+        <Image
+          source={{ uri: item?.image}}
           onLoadStart={() => setLoader(true)}
           onLoadEnd={() => setLoader(false)}
           style={[styles.image, { width: ITEM_WIDTH }]}
-          resizeMode={FastImage.resizeMode.cover} />
+          />
       </TouchableOpacity>
     )
   }

@@ -22,82 +22,84 @@ const Stack = createNativeStackNavigator();
 const Routes = () => {
 
   const [isOpen, setIsOpen] = useState(false);
-    const internetState  = useNetInfo();
+  const internetState = useNetInfo();
 
-    useEffect(() => {
-      if (internetState.isConnected === false) {
-       setIsOpen(true)
-  }else{
-    setIsOpen(false)
-  }
-}, [internetState.isConnected])
+  useEffect(() => {
+    if (internetState.isConnected === false) {
+      setIsOpen(true)
+    } else {
+      setIsOpen(false)
+    }
+  }, [internetState.isConnected])
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen  name="FullScreenImage" component={FullScreenImage}/>
-      <Stack.Screen name="CategoriesDetailScreen" component={CategoriesDetailScreen}/>
-      <Stack.Screen name="TopDetailScreen" component={TopDetailScreen}/>
+        <Stack.Screen name="FullScreenImage" component={FullScreenImage} />
+        <Stack.Screen name="CategoriesDetailScreen" component={CategoriesDetailScreen} />
       </Stack.Navigator>
-      {isOpen && <NoInternet/>}
+      {isOpen && <NoInternet />}
     </NavigationContainer>
   )
 }
 
 function Home() {
 
-    return(
-        <Tab.Navigator screenOptions={({ route }) => ({
-            headerShown: false,
-            tabBarActiveTintColor: colors.orange,
-            tabBarInactiveTintColor: colors.black,
-            tabBarStyle: { 
-              height: hp(9), 
-              backgroundColor: colors.white,
-            },
-            tabBarLabel: ({ focused }) => (
-                <View style={{
-                    borderWidth: focused ?hp(0.3) : 0, 
-                    width:wp(6), 
-                    marginBottom:wp(5),
-                    borderRadius:wp(5),
-                    borderColor: colors.orange
-                }}/>
-            ),
-            tabBarIcon: ({  focused }) => (
-              <View style={{justifyContent:"center"}}>
-                {
-                  route.name == 'HomeTab' ?
-                   <Image source={imagePath.home} style={[styles.icons,{tintColor: focused ?  colors.orange : colors.black}]} />
-                    :
-                    route.name == 'Categories' ?
-                    <Image source={imagePath.grid} style={[styles.icons,{tintColor: focused ?  colors.orange : colors.black}]}/>
-                      :
-                      <Image source={imagePath.trending} style={[styles.icons,{tintColor: focused ?  colors.orange : colors.black}]}/>
-                }
-              </View>
-            ),
-          })}>
-              <Tab.Screen name="HomeTab" component={HomeTab} />
-              <Tab.Screen name="Categories" component={Categories} />
-              <Tab.Screen name="TrendingScreen" component={TrendingScreen} />
-        </Tab.Navigator>
-    )
+  return (
+    <Tab.Navigator screenOptions={({ route }) => ({
+      headerShown: false,
+      tabBarActiveTintColor: colors.orange,
+      tabBarInactiveTintColor: colors.black,
+      tabBarStyle: {
+        height: hp(9),
+        backgroundColor: colors.white,
+      },
+      tabBarLabel: ({ focused }) => (
+        <View style={{
+          borderWidth: focused ? hp(0.3) : 0,
+          width: wp(6),
+          marginBottom: wp(5),
+          borderRadius: wp(5),
+          borderColor: colors.orange
+        }} />
+      ),
+      tabBarIcon: ({ focused }) => (
+        <View style={{ justifyContent: "center" }}>
+          {
+            route.name == 'HomeTab' ?
+              <Image source={imagePath.home} style={[styles.icons, { tintColor: focused ? colors.orange : colors.black }]} />
+              :
+              route.name == 'TopDetail'  ?
+              <Image source={imagePath.top} style={[styles.icons, { tintColor: focused ? colors.orange : colors.black }]} /> :
+              route.name == 'Categories' ?
+                <Image source={imagePath.grid} style={[styles.icons, { tintColor: focused ? colors.orange : colors.black }]} /> :
+                  <Image source={imagePath.trending} style={[styles.icons, { tintColor: focused ? colors.orange : colors.black }]} />
+          }
+        </View>
+      ),
+    })}>
+      <Tab.Screen name="HomeTab" component={HomeTab} />
+      <Stack.Screen name="TopDetail" component={TopDetailScreen} />
+      <Tab.Screen name="Categories" component={Categories} />
+      <Tab.Screen name="Trending" component={TrendingScreen} />
+
+    </Tab.Navigator>
+  )
 }
 
 function HomeTab() {
-  return(
-    <Stack.Navigator initialRouteName='HomeScreen' screenOptions={{headerShown:false}}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen}/>
+  return (
+    <Stack.Navigator initialRouteName='HomeScreen' screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
     </Stack.Navigator>
   )
 }
 
 function Categories() {
-  return(
-    <Stack.Navigator initialRouteName='CategoriesScreen' screenOptions={{headerShown:false}}>
-      <Stack.Screen name="CategoriesScreen" component={CategoriesScreen}/>
+  return (
+    <Stack.Navigator initialRouteName='CategoriesScreen' screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
     </Stack.Navigator>
   )
 }
@@ -105,9 +107,9 @@ function Categories() {
 export default Routes
 
 const styles = StyleSheet.create({
-  icons:{
-    width:wp(7),
-     height:wp(7),
-     resizeMode:'contain',
-    }
+  icons: {
+    width: wp(7),
+    height: wp(7),
+    resizeMode: 'contain',
+  }
 })

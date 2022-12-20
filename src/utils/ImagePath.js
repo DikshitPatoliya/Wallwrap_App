@@ -9,4 +9,5 @@ export const imagePath = {
     homeWhite:require('../assets/Icons/homeWhite.png'),
     lock:require('../assets/Icons/lock.png'),
     wLogo:require('../assets/Icons/W.png'),
+    top:require('../assets/Icons/compass.png'),
 }
