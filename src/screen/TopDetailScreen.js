@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, FlatList } from 'react-native'
+import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -7,6 +7,8 @@ import { hp, wp } from '../utils/responsiveScreen';
 import ImageView from '../Components/ImageView';
 import { fonts } from '../utils/fontsPath';
 import firestore from '@react-native-firebase/firestore';
+import FastImage from 'react-native-fast-image';
+import { commanStyle } from '../utils/commanStyle';
 
 const TopDetailScreen = () => {
 
@@ -31,18 +33,28 @@ const TopDetailScreen = () => {
       <FlatList
         data={data?.all}
         numColumns={2}
+        initialNumToRender={5}
+        maxToRenderPerBatch={10}
+        windowSize={10}
         style={{ marginHorizontal: wp(4.5) }}
         columnWrapperStyle={{ justifyContent: 'space-between' }}
         showsVerticalScrollIndicator={false}
         renderItem={(item) => {
           return (
-            <ImageView
-              uri={item?.item?.image}
-              loader={loader}
-              onLoadStart={() => setLoader(true)}
-              onLoadEnd={() => setLoader(false)}
-              onPress={() => navigation.navigate('FullScreenImage', { url: item?.item?.image })}
+            <TouchableOpacity                   
+            onPress={() => navigation.navigate('FullScreenImage', { 
+              url:  item?.item?.image 
+            })}
+            >
+            <FastImage
+              source={{
+                uri:  item?.item?.image, 
+                priority:FastImage.priority.high,
+                caches:FastImage.cacheControl.cacheOnly
+              }}
+              style={commanStyle.image}
             />
+            </TouchableOpacity>
           )
         }}
       />

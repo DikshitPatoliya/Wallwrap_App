@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { wp } from "./responsiveScreen";
+import { hp, wp } from "./responsiveScreen";
 
 export const commanStyle = StyleSheet.create({
   loader: {
@@ -16,5 +16,12 @@ export const commanStyle = StyleSheet.create({
     height: wp(10),
     alignSelf: "center",
     resizeMode: 'contain'
-  }
+  },
+  image:{
+    width: wp(44),
+  height: wp(70),
+  marginBottom: hp(1.6),
+  borderRadius: wp(3),
+  resizeMode: 'cover',
+}
 })
