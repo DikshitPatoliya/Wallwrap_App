@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL } from "./Url";
+import {BASE_URL} from "@env"
 
 export const postRequestApi = (url, data) => {
 	return axios.post(BASE_URL + url, data, {
