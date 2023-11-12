@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "908019452009",
-    "project_id": "wall-d73ef",
-    "storage_bucket": "wall-d73ef.appspot.com"
+    "project_number": "632798414919",
+    "project_id": "wallpepar-51c6f",
+    "storage_bucket": "wallpepar-51c6f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:908019452009:android:831bdab715df045d627af8",
+        "mobilesdk_app_id": "1:632798414919:android:65d5ff8c3a3fde9b1f0962",
         "android_client_info": {
           "package_name": "com.wallwrapapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "908019452009-v7fpub55q31l9v9foreh9ocj34s8jmor.apps.googleusercontent.com",
+          "client_id": "632798414919-q132rch690vhjlb8g3cg4tr4dn3r06o0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDEL-Cog0Vy4JWC5rnNYsuExJxDLgXE7jE"
+          "current_key": "AIzaSyDlDJajs-tsQNX_hXJvxTqpPYmChfqg_Hk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "908019452009-v7fpub55q31l9v9foreh9ocj34s8jmor.apps.googleusercontent.com",
+              "client_id": "632798414919-q132rch690vhjlb8g3cg4tr4dn3r06o0.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -18,7 +18,7 @@ export const commanStyle = StyleSheet.create({
     resizeMode: 'contain'
   },
   image:{
-    width: wp(44),
+    width: wp(45),
   height: wp(70),
   marginBottom: hp(1.6),
   borderRadius: wp(3),

@@ -1,5 +1,5 @@
-import { ActivityIndicator, Image, ImageBackground, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { ActivityIndicator, ImageBackground, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../utils/colors';
 import { hp, wp } from '../utils/responsiveScreen';
@@ -8,22 +8,36 @@ import { fonts } from '../utils/fontsPath';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import WallpaperManager, { TYPE } from "react-native-wallpaper-manage";
 import RNFetchBlob from 'rn-fetch-blob';
+import { useDispatch } from 'react-redux';
+import { updateImageCount } from '../Redux/ImageSlice';
+import { createImageProgress } from 'react-native-image-progress';
+import ProgressBar from 'react-native-progress/Bar';
 
 const FullScreenImage = () => {
+
+  const Image = createImageProgress(ImageBackground);
+
+	const dispatch = useDispatch();
 
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
   const routes = useRoute();
   const [loader, setLoader] = useState(false);
+
+  useEffect(() => { 
+    const params = {
+      countType: "VIEW",
+      id: routes?.params?.item?.id
+    }
+    dispatch(updateImageCount(params))
+  },[])
   
   const setLockWallpaper = async () => {
-    const result = await WallpaperManager.setWallpaper(routes?.params?.url, TYPE.FLAG_LOCK)
-    console.log("result", result)
+    await WallpaperManager.setWallpaper(routes?.params?.item?.url, TYPE.FLAG_LOCK)
   }
 
   const setHomeWallpaper = async () => {
-    const result = await WallpaperManager.setWallpaper(routes?.params?.url, TYPE.FLAG_SYSTEM)
-    console.log("result", result)
+     await WallpaperManager.setWallpaper(routes?.params?.item?.url, TYPE.FLAG_SYSTEM)
   }
 
   
@@ -49,20 +63,32 @@ const FullScreenImage = () => {
     };
     config(options)
       .fetch('GET', image_URL)
-      .then(res => {
+      .then(async(res) => {
         if(res){
-          ToastAndroid.show("Image Download Successfully", ToastAndroid.SHORT);
+          const params = {
+            countType: "DOWNLOAD",
+            id: routes?.params?.item?.id
+          }
+         await dispatch(updateImageCount(params))
+        ToastAndroid.show("Image Download Successfully", ToastAndroid.SHORT);
         }
       });
   };
 
   return (
-    <ImageBackground
-      onLoadStart={() => setLoader(true)}
-      onLoadEnd={() => setLoader(false)}
-      source={{ uri: routes?.params?.url, }}
+    <Image
+      source={{ uri: routes?.params?.item?.url }}
+      indicator={ProgressBar}
+      indicatorProps={{
+        size: 20,
+        borderWidth: 0,
+        color: 'rgba(150, 150, 150, 1)',
+        unfilledColor: 'rgba(200, 200, 200, 0.2)'
+      }}
+      imageStyle={{
+        backgroundColor:'rgba(200, 200, 200, 0.2)'
+      }}
       style={[styles.container, { paddingTop: top + hp(2) }]}>
-      {loader && <ActivityIndicator color={colors.dark} size={'large'} style={styles.loader} />}
       <View style={styles.mainContainer}>
       <TouchableOpacity style={{ marginRight: wp(4) }} onPress={() => navigation.goBack()}>
         <View style={styles.bottom}>
@@ -89,7 +115,7 @@ const FullScreenImage = () => {
           <Text style={styles.text}>Home</Text>
         </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </Image>
   )
 }
 

@@ -59,7 +59,6 @@ function Home() {
         <View style={{
           borderWidth: focused ? hp(0.3) : 0,
           width: wp(6),
-          marginBottom: wp(5),
           borderRadius: wp(5),
           borderColor: colors.orange
         }} />

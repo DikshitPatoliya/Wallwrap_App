@@ -1,54 +1,59 @@
-import {  Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hp, wp } from '../utils/responsiveScreen';
 import { colors } from '../utils/colors';
 import { fonts } from '../utils/fontsPath';
 import Carousel from 'react-native-snap-carousel';
-import firestore from '@react-native-firebase/firestore';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { imagePath } from '../utils/ImagePath';
-import { commanStyle } from '../utils/commanStyle';
+import { useDispatch, useSelector } from 'react-redux';
+import { getImageTrending } from '../Redux/ImageSlice';
+import FastImage from 'react-native-fast-image';
+import { createImageProgress } from 'react-native-image-progress';
+import ProgressBar from 'react-native-progress/Bar';
 
 const TrendingScreen = () => {
+  const Image = createImageProgress(FastImage);
+
+  const { trendingImages } = useSelector((state) => state.getRecentImageReducer);
+  const dispatch = useDispatch();
 
   const { top } = useSafeAreaInsets();
   const SLIDER_WIDTH = Dimensions.get('window').width + 80
   const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
-  const [data, setData] = useState();
   const navigation = useNavigation();
   const IsFoused = useIsFocused();
-  const [loader, setLoader] = useState(false);
+
 
   useEffect(() => {
     if (IsFoused) {
-      getImage()
+      dispatch(getImageTrending())
     }
   }, [IsFoused])
 
-  const getImage = async () => {
-    const user = await firestore().collection('Categories').doc('Trending').get();
-    setData(user.data())
-  }
-  const renderItems = ({ item, index }) => {
+
+  const renderItems = ({ item }) => {
     return (
-      <TouchableOpacity disabled={ loader == false ? false : true} onPress={() => navigation.navigate('FullScreenImage', { url: item?.image })}>
-        {loader &&
-        <View style={[styles.image, {
-          width: ITEM_WIDTH,
-          position:'absolute',
-          zIndex:999,
-          justifyContent:"center",
-          backgroundColor:colors.white
-        }]}>
-         <Image source={imagePath.wLogo} style={commanStyle.wLogo} /> 
-        </View>}
+      <TouchableOpacity onPress={() => navigation.navigate('FullScreenImage', { item: item })}>
         <Image
-          source={{ uri: item?.image}}
-          onLoadStart={() => setLoader(true)}
-          onLoadEnd={() => setLoader(false)}
+          source={{
+            uri: item?.url,
+            priority: FastImage.priority.high,
+            caches: FastImage.cacheControl.cacheOnly
+          }}
+          indicator={ProgressBar}
+          indicatorProps={{
+            size: 20,
+            borderWidth: 0,
+            color: 'rgba(150, 150, 150, 1)',
+            unfilledColor: 'rgba(200, 200, 200, 0.2)'
+          }}
+          imageStyle={{
+            borderRadius: wp(3),
+            backgroundColor: 'rgba(200, 200, 200, 0.2)'
+          }}
           style={[styles.image, { width: ITEM_WIDTH }]}
-          />
+        />
       </TouchableOpacity>
     )
   }
@@ -62,7 +67,7 @@ const TrendingScreen = () => {
           loop={true}
           layout="default"
           layoutCardOffset={9}
-          data={data?.all}
+          data={trendingImages?.data || []}
           renderItem={renderItems}
           sliderWidth={wp(100)}
           itemWidth={wp(85)}

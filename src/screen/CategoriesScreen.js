@@ -1,75 +1,63 @@
-import { ActivityIndicator, FlatList, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../utils/colors';
 import { hp, wp } from '../utils/responsiveScreen';
 import { fonts } from '../utils/fontsPath';
 import { useNavigation } from '@react-navigation/native';
-import firestore from '@react-native-firebase/firestore';
 import { commanStyle } from '../utils/commanStyle';
-import FastImage from 'react-native-fast-image';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCategory } from '../Redux/ImageSlice';
+import { createImageProgress } from 'react-native-image-progress';
+import ProgressBar from 'react-native-progress/Bar';
+import { FlashList } from '@shopify/flash-list';
 
 const CategoriesScreen = () => {
+  const Image = createImageProgress(ImageBackground);
+
+  const { Category } = useSelector((state) => state.getRecentImageReducer);
+	const dispatch = useDispatch();
 
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
-  const [data, setData] = useState();
-  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
-    getImage()
+    dispatch(getCategory())
   }, [])
-
-  const getImage = async () => {
-    setLoader(true)
-    const user = await firestore().collection('CategoriesName').doc('CategoriesName').get();
-    setData(user.data())
-    setLoader(false)
-  }
 
 
   return (
     <View style={[styles.container, { paddingTop: top + hp(2) }]}>
-      {loader && <ActivityIndicator size={"large"} color={colors.dark} style={commanStyle.loader} />}
       <Text style={styles.topText}>Categories</Text>
-      <View style={{ alignSelf: "center" }}>
-        <ScrollView>
-        {data?.all?.map((item) => {
-          return(
-            <TouchableOpacity onPress={() => navigation.navigate('CategoriesDetailScreen', { type: item?.title })}>
-                <ImageBackground
+      <View style={{flex:1}}>
+        <FlashList
+          data={Category || []}
+          showsVerticalScrollIndicator={false}
+          estimatedItemSize={400}
+          contentContainerStyle={{ paddingBottom: hp(10), paddingHorizontal:wp(5)}}
+          renderItem={({item}) => {
+            return (
+              <TouchableOpacity  
+              onPress={() => navigation.navigate('CategoriesDetailScreen', { type: item?.name, id : item?.id})}>
+                <Image
                   imageStyle={{ borderRadius: wp(3) }}
                   source={{ uri: item?.image }}
+                  indicator={ProgressBar}
+                  indicatorProps={{
+                    size: 20,
+                    borderWidth: 0,
+                    color: 'rgba(150, 150, 150, 1)',
+                    unfilledColor: 'rgba(200, 200, 200, 0.2)'
+                  }}
                   style={styles.categoriesImage}>
                   <View style={styles.darkImage} />
-                  <Text style={styles.titleText}>{item?.title}</Text>
-                </ImageBackground>
-              </TouchableOpacity>
-          )
-        })}
-        </ScrollView>
-        {/* <FlatList
-          data={data?.all}
-          showsVerticalScrollIndicator={false}
-          initialNumToRender={5}
-          maxToRenderPerBatch={10}
-          windowSize={10}
-          contentContainerStyle={{ paddingBottom: hp(10) }}
-          renderItem={(item) => {
-            return (
-              <TouchableOpacity onPress={() => navigation.navigate('CategoriesDetailScreen', { type: item?.item?.title })}>
-                <ImageBackground
-                  imageStyle={{ borderRadius: wp(3) }}
-                  source={{ uri: item?.item?.image }}
-                  style={styles.categoriesImage}>
-                  <View style={styles.darkImage} />
-                  <Text style={styles.titleText}>{item?.item?.title}</Text>
-                </ImageBackground>
+                  <Text style={styles.titleText}>{item?.name}</Text>
+                </Image>
               </TouchableOpacity>
             )
           }}
-        /> */}
-      </View>
+        />
+        </View>
     </View>
   )
 }

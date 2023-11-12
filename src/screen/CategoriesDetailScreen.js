@@ -1,4 +1,4 @@
-import {   ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
@@ -6,76 +6,43 @@ import { colors } from '../utils/colors';
 import { hp, wp } from '../utils/responsiveScreen';
 import { imagePath } from '../utils/ImagePath';
 import { fonts } from '../utils/fontsPath';
-import firestore from '@react-native-firebase/firestore';
-import axios from 'axios';
 import FastImage from 'react-native-fast-image';
 import { commanStyle } from '../utils/commanStyle';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCategoryImage } from '../Redux/ImageSlice';
+import { FlashList } from '@shopify/flash-list';
+import { createImageProgress } from 'react-native-image-progress';
+import ProgressBar from 'react-native-progress/Bar';
 
 const CategoriesDetailScreen = () => {
+  const Images = createImageProgress(FastImage);
+
+  const { imagesByCategory } = useSelector((state) => state.getRecentImageReducer);
+  const dispatch = useDispatch();
 
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
   const routes = useRoute();
-  const [data, setData] = useState();
-  const [loader, setLoader] = useState(false);
-  const [firebaseData,setFirebaseData] = useState();
   const IsFoused = useIsFocused();
-  const [totalPage, setTotalPage] = useState();
-  const [page, setPage] = useState(1);
+
 
   useEffect(() => {
-    setPage(1)
+    if (IsFoused) {
+      dispatch(getCategoryImage({ id: routes?.params?.id }))
+    }
   }, [IsFoused])
 
-  // const getImage = async () => {
-   
-  // }
-
-  useEffect(() =>{
-    setPage(1)
-  },[IsFoused])
-
-  useEffect(() => {
-      getRecentlyImage();
-  }, [page])
-
-  const getRecentlyImage = async () => {
-    const user = await firestore().collection('Categories').doc(`${routes?.params?.type}`).get();
-    setFirebaseData(user.data())
-  //   setLoader(true)
-  //  await axios.get(`https://api.unsplash.com/search/collections?page=${page}&query=${routes?.params?.type}&client_id=ePkn5QB9CUFf4h_URl5dlMUdmCaCgjvIpKwNk2gu6ik&per_page=30`)
-  // .then(function (response) {
-  //   setTotalPage(response?.data?.total_pages)
-  //   if(page == 1){
-  //     setData([data])
-  //   }else{
-  //     setData([...data, ...response?.data?.results])
-  //   }
-  //   setLoader(false)
-  // })
-  // .catch(async (error) => {
-  //   console.log(error == 403)
-  
-  // })
+  const onEndReached = async () => {
+    if (imagesByCategory?.next && imagesByCategory?.next <= imagesByCategory?.lastPage) {
+      await dispatch(getCategoryImage({ page: imagesByCategory?.next, id: routes?.params?.id }))
+    }
   }
 
-const onEndReached = () => {
-  if(page < totalPage){
-    setPage((p) => p + 1 )
-  }
-}
 
-const ListFooterComponent = () => {
-  return (
-    <View>
-      {loader ? <ActivityIndicator color={colors.dark} /> : null}
-    </View>
-  )
-}
 
   return (
     <View style={[styles.container, { paddingTop: top + hp(1) }]}>
-      <View style={{ flexDirection: 'row', marginHorizontal:wp(5) }}>
+      <View style={{ flexDirection: 'row', marginHorizontal: wp(5) }}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={imagePath.backArrow} style={styles.backIcons} />
         </TouchableOpacity>
@@ -83,54 +50,41 @@ const ListFooterComponent = () => {
           <Text style={styles.headerText}>{routes?.params?.type}</Text>
         </View>
       </View>
-      <ScrollView>
-        <View style={{flexDirection:'row', flexWrap:'wrap', justifyContent:"space-evenly"}}>
-      {firebaseData?.all?.map((item) =>{
-        return(
-          <TouchableOpacity                   
-          onPress={() => navigation.navigate('FullScreenImage', {url:item?.image})}>
-            <Image  source={{uri: item?.image}} style={commanStyle.image}/>
-          {/* <FastImage
-            source={{
-              uri:  item?.image,
-              priority:FastImage.priority.high,
-              caches:FastImage.cacheControl.immutable
-            }}
-            style={commanStyle.image}
-          /> */}
-          </TouchableOpacity>
-        )
-      })}
-      </View>
-      </ScrollView>
-      {/* <FlatList
-          data={firebaseData ? firebaseData?.all :  data}
-          showsVerticalScrollIndicator={false}
-          style={{marginHorizontal:wp(4.5)}}
-          numColumns={2}
-          onEndReached={() => firebaseData?.all ? null : onEndReached}
-          ListFooterComponent={() => firebaseData?.all ? null : ListFooterComponent}
-          columnWrapperStyle={{justifyContent:'space-between'}}
-          contentContainerStyle={styles.columns}
-          renderItem={(item) => {
-            return (
-              <TouchableOpacity                   
-              onPress={() => navigation.navigate('FullScreenImage', { 
-                url: firebaseData?.all ?  item?.item?.image : item?.item?.cover_photo?.urls?.raw
-              })}
-              >
-              <FastImage
-                source={{
-                  uri: firebaseData?.all ?  item?.item?.image : item?.item?.cover_photo?.urls?.small,
-                  priority:FastImage.priority.high,
-                  caches:FastImage.cacheControl.immutable
-                }}
-                style={commanStyle.image}
-              />
+      <FlashList
+        data={imagesByCategory?.data || []}
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+        numColumns={2}
+        onEndReached={onEndReached}
+        renderItem={({ item }) => {
+          return (
+            <View style={{ marginHorizontal: wp(2) }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('FullScreenImage', { item: item })}>
+                <Images
+                  source={{
+                    uri: item?.url,
+                    priority: FastImage.priority.high,
+                    caches: FastImage.cacheControl.cacheOnly
+                  }}
+                  indicator={ProgressBar}
+                  indicatorProps={{
+                    size: 20,
+                    borderWidth: 0,
+                    color: 'rgba(150, 150, 150, 1)',
+                    unfilledColor: 'rgba(200, 200, 200, 0.2)'
+                  }}
+                  imageStyle={{
+                    borderRadius: wp(3),
+                    backgroundColor: 'rgba(200, 200, 200, 0.2)'
+                  }}
+                  style={commanStyle.image}
+                />
               </TouchableOpacity>
-            )
-          }}
-      /> */}
+            </View>
+          )
+        }}
+      />
     </View>
   )
 }
